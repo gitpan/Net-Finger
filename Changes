@@ -25,3 +25,7 @@ Revision history for Perl extension Net::Finger.
 	- John Porter is wee. I am neen. Fixed a bug with $_ that I
           deserve to be righteously slapped for. Thanks, John!
 
+1.06  Thu Nov  1 15:14:27 PST 2001
+	- Many thanks to Alan Burlison, who sent in a patch for a bug that
+	  inhibited verbose output when using the "@host" syntax.
+

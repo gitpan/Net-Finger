@@ -21,7 +21,7 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw( &finger );
 
-$VERSION = '1.05';
+$VERSION = '1.06';
 $debug = 0;
 
 
@@ -50,7 +50,7 @@ sub finger {
         $request = $addr;
     }
 
-    if ($request and $verbose) {
+    if ($verbose) {
         $request = "/W $request";
     }
 
