@@ -9,3 +9,7 @@ Revision history for Perl extension Net::Finger.
 	- Fixed a stupid bug with apostrophes in quoted strings. Thanks
 	  muchly to James Mastros for pointing this out.
 
+1.02  Thu Feb 11 10:24:14 EST 1999
+	- D'oh! Thanks to a suggestion from Chris "Pudge" Nandor, it now does
+	  proper newline translation in the response from the server.
+

@@ -22,7 +22,7 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw( &finger );
 
-$VERSION = '1.01';
+$VERSION = '1.02';
 
 
 
@@ -92,6 +92,7 @@ sub finger {
     }
 
     while (<SOCK>) {
+		s/\015?\012/\n/g;    # thanks, Pudge!
         push @lines, $_;
     }
 
@@ -184,6 +185,8 @@ Doesn't yet do non-blocking requests. (FITNR. Really.)
 =item *
 
 Doesn't do local requests unless there's a finger server running on localhost.
+(This isn't so much a bug as a noteworthy variation from the standard Unix
+finger client. Whoop.)
 
 =item *
 
