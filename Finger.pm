@@ -21,7 +21,7 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw( &finger );
 
-$VERSION = '1.03';
+$VERSION = '1.04';
 $debug = 0;
 
 
@@ -88,7 +88,8 @@ sub finger {
     }
 
     while (<SOCK>) {
-        push @lines, $_;
+	s/\015?\012/\n/g;    # thanks (again), Pudge!
+	push @lines, $_;
     }
 
     if ($debug) {
