@@ -21,7 +21,7 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw( &finger );
 
-$VERSION = '1.04';
+$VERSION = '1.05';
 $debug = 0;
 
 
@@ -30,7 +30,7 @@ $debug = 0;
 
 sub finger {
     my ($addr, $verbose) = @_;
-    my ($host, $port, $request, @lines);
+    my ($host, $port, $request, @lines, $line);
 
     unless (@_) {
         carp "Not enough arguments to Net::Finger::finger()";
@@ -87,9 +87,9 @@ sub finger {
         warn "Waiting for response.\n";
     }
 
-    while (<SOCK>) {
-	s/\015?\012/\n/g;    # thanks (again), Pudge!
-	push @lines, $_;
+    while (defined( $line = <SOCK> )) {
+	$line =~ s/\015?\012/\n/g;    # thanks (again), Pudge!
+	push @lines, $line;
     }
 
     if ($debug) {
@@ -191,6 +191,8 @@ Doesn't do local requests unless there's a finger server running on localhost.
 =item *
 
 Contrary to the name's implications, this module involves no teledildonics.
+
+=back
 
 =head1 AUTHOR
 

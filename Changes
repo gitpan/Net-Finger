@@ -21,4 +21,7 @@ Revision history for Perl extension Net::Finger.
 1.04  Thu Mar  4 12:00:34 EST 1999
 	- The Pudgemeister does it again. Damn, am I stupid.
 
+1.05  Sat Jun 12 14:55:40 CDT 1999
+	- John Porter is wee. I am neen. Fixed a bug with $_ that I
+          deserve to be righteously slapped for. Thanks, John!
 
