@@ -22,7 +22,7 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw( &finger );
 
-$VERSION = '1.0';
+$VERSION = '1.01';
 
 
 
@@ -63,7 +63,7 @@ sub finger {
     }
 
     unless (socket( SOCK, PF_INET, SOCK_STREAM, getprotobyname('tcp'))) {
-        $error = "Can't create a new socket: $!";
+        $error = "Can\'t create a new socket: $!";
         return;
     }
     select SOCK;  $| = 1;  select STDOUT;
@@ -77,7 +77,7 @@ sub finger {
                      sockaddr_in((getservbyname('finger', 'tcp'))[2],
                                  inet_aton($host)) ))
     {
-        $error = "Can't connect to $host: $!";
+        $error = "Can\'t connect to $host: $!";
         return;
     }
 
