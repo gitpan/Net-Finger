@@ -1,0 +1,7 @@
+Revision history for Perl extension Net::Finger.
+
+1.0  Tue Dec 15 16:32:05 1998
+	- Wrote it in about 30 minutes while staying late at work. Cleaned
+	  it up the next day for CPAN submission. See the BUGS section in
+	  the pod for the things I'd like to work into it sometime.
+
