@@ -9,7 +9,12 @@ Revision history for Perl extension Net::Finger.
 	- Fixed a stupid bug with apostrophes in quoted strings. Thanks
 	  muchly to James Mastros for pointing this out.
 
-1.02  Thu Feb 11 10:24:14 EST 1999
-	- D'oh! Thanks to a suggestion from Chris "Pudge" Nandor, it now does
-	  proper newline translation in the response from the server.
+1.02  Sometime on February 11th
+	- Chris Nandor, the Pudge-Meister, pointed out that \r\n won't mean
+	  what I was using it to mean on a Mac. We now use \015\012.
+
+1.03  Wed Mar  3 12:33:45 EST 1999
+	- The inifitely studly Vladimir Pastukhov sent me a patch for the
+	  nifty "hostname:port" feature. Replaced the constant DEBUG stuff
+	  with the user-frobbable $Net::Finger::debug flag.
 

@@ -8,33 +8,29 @@
 #  as Perl itself. See your Perl distribution for details.       #
 #                                                                #
 ##################################################################
-
+# $Id$
 
 package Net::Finger;
 
 use strict;
 use Socket;
 use Carp;
-use vars qw($VERSION @ISA @EXPORT $error);
-use constant DEBUG => 0;
+use vars qw($VERSION @ISA @EXPORT $error $debug);
 
 require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw( &finger );
 
-$VERSION = '1.02';
+$VERSION = '1.03';
+$debug = 0;
 
 
-
-# I know the if (DEBUG) crap gets in the way of the code a bit, but it's
-# a worthy sacrifice from a debugging perspective. Bear in mind that
-# Perl's internal compiler will discard the stuff in the DEBUG blocks at
-# compile-time. Nifty.
-
+# I know the if ($debug) crap gets in the way of the code a bit, but
+# it's a worthy sacrifice as far as I'm concerned.
 
 sub finger {
     my ($addr, $verbose) = @_;
-    my ($host, $request, @lines);
+    my ($host, $port, $request, @lines);
 
     unless (@_) {
         carp "Not enough arguments to Net::Finger::finger()";
@@ -58,7 +54,7 @@ sub finger {
         $request = "/W $request";
     }
 
-    if (DEBUG) {
+    if ($debug) {
         warn "Creating a new socket.\n";
     }
 
@@ -68,35 +64,34 @@ sub finger {
     }
     select SOCK;  $| = 1;  select STDOUT;
 
-    if (DEBUG) {
-        warn "Connecting to $host, port ",
-            (getservbyname('finger', 'tcp'))[2], ".\n";
+    $port = ($host =~ s/:([0-9]*)$// && $1) ? $1 :
+	                (getservbyname('finger', 'tcp'))[2];
+	
+    if ($debug) {
+        warn "Connecting to $host, port $port.\n";
     }
 
-    unless (connect( SOCK,
-                     sockaddr_in((getservbyname('finger', 'tcp'))[2],
-                                 inet_aton($host)) ))
+    unless (connect( SOCK, sockaddr_in($port, inet_aton($host)) ))
     {
         $error = "Can\'t connect to $host: $!";
         return;
     }
 
-    if (DEBUG) {
+    if ($debug) {
         warn "Sending request: \"$request\"\n";
     }
 
     print SOCK "$request\015\012";
 
-    if (DEBUG) {
+    if ($debug) {
         warn "Waiting for response.\n";
     }
 
     while (<SOCK>) {
-		s/\015?\012/\n/g;    # thanks, Pudge!
         push @lines, $_;
     }
 
-    if (DEBUG) {
+    if ($debug) {
         warn "Response received. Closing connection.\n";
     }
 
@@ -140,12 +135,16 @@ entitled C<finger()>. It takes two arguments:
 =item *
 
 A username or email address to finger. (Yes, it does support the
-vaguely deprecated "user@host@host" syntax.)
+vaguely deprecated "user@host@host" syntax.) If you need to use a port
+other than the default finger port (79), you can specify it like so:
+"username@hostname:port".
 
 =item *
 
 (Optional) A boolean value for verbosity. True == verbose output. If
-you don't give it a value, it defaults to false.
+you don't give it a value, it defaults to false. Actually, whether
+this output will differ from the non-verbose version at all is up to
+the finger server.
 
 =back
 
@@ -154,7 +153,9 @@ will return the server's response in one large string. If it's used in
 an array context, it will return the response as a list, line by
 line. If an error of some sort occurs, it returns undef and puts a
 string describing the error into the package global variable
-C<$Net::Finger::error>.
+C<$Net::Finger::error>. If you'd like to see some excessively verbose
+output describing every step C<finger()> takes while talking to the
+other server, put a true value in the variable C<$Net::Finger::debug>.
 
 Here's a sample program that implements a very tiny, stripped-down
 finger(1):
@@ -185,8 +186,6 @@ Doesn't yet do non-blocking requests. (FITNR. Really.)
 =item *
 
 Doesn't do local requests unless there's a finger server running on localhost.
-(This isn't so much a bug as a noteworthy variation from the standard Unix
-finger client. Whoop.)
 
 =item *
 
